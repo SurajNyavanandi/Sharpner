@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <form action="">
+        <label for="amount">Choose expenseamount:</label>
+        <input type="number" id="amount" class="amount" name="amount">
+        <label for="description">Choose description:</label>
+        <input type="text" id="description" class="description" name="description">
+        <label for="">Choose a category:</label>
+        <select name="category" id="category">
+            <option value="food">food</option>
+            <option value="fuel">fuel</option>
+            <option value="electronics">electronics</option>
+            <option value="movies">movies</option>
+        </select>
+        <button type="button" class="btn">Add Expense</button>
+    </form>
+    <div id="div"></div>
+</body>
+<script>
+       document.querySelector('.btn').addEventListener('click',function(event){
+        let obj={
+            amount:document.getElementById('amount').value,
+            description:document.getElementById('description').value,
+            category:document.getElementById('category').value
+        }
+        localStorage.setItem('k1',JSON.stringify(obj));    
+        let k=JSON.parse(localStorage.getItem('k1'));
+
+        let d=document.createElement('div');
+        d.className="div";
+        document.body.appendChild(d);
+
+        let d2=document.createElement('span');
+        d2.className="span";
+        d2.innerHTML=`${k.amount}--${k.description}--${k.category}`;
+        
+        let db=document.createElement('button');
+        db.innerHTML="Delete Expense";
+
+        db.addEventListener('click',function(event){
+        db.remove(d);
+        })
+       
+
+        let eb=document.createElement('button');
+        eb.innerHTML="Edit Expense";
+        eb.addEventListener('click',function(event){
+
+        })
+        d.append(d2,db,eb);
+       });
+
+</script>
+</html>
