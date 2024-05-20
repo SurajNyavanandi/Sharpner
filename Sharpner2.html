@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharpner Project</title>
+</head>
+<body>
+   <label for="price">Selling Price :</label>
+   <input type="number" id="price"> 
+   <label for="name">Product Name :</label>
+   <input type="text" id="name">
+   <button onclick="addProduct()">Add Product</button>
+   <h2>Products</h2>
+   <ul id="container"></ul>
+   
+   
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.0/axios.min.js"></script>
+<script>
+       let api="https://crudcrud.com/api/7ec0c85d707549e68b022b65a17766a0/Products";
+       let container=document.querySelector('#container');
+       let div2=document.createElement('div');
+       displayItems();
+       function addProduct(){
+        let product={
+              price:document.querySelector('#price').value,
+              name:document.querySelector('#name').value
+        }
+        axios.post(`${api}`,product)
+             .then((res)=>{
+                displayItems();
+                console.log('Posted Successfully');
+                clearInputs();
+             })
+             .catch((err)=>console.log('ERROR:posting'))
+       }
+       function displayItems(){
+        let sum=0;
+        container.innerHTML='';
+        axios.get(`${api}`)
+             .then((res)=>{
+                let arr=res.data;
+                arr.forEach((product,index)=>{
+                    let str=`${product.price}`
+                    sum+=parseInt(str);
+                    let ic=document.createElement('div');
+                    ic.innerHTML=`<span>${product.price}--${product.name}</span>
+                                  <button onclick="deleteProduct(this,'${product._id}')">Delete Product</button>
+                                  `;
+
+                    container.appendChild(ic);
+                    displaySum(sum);
+                    clearInputs();
+                                })
+
+             }).catch((err)=>console.log('ERROR:displaying '))
+       }
+       function deleteProduct(button,id){
+        axios.delete(`${api}/${id}`)
+             .then((res)=>{
+                displayItems();
+                button.removeParentElement();
+                console.log('Deleted Successfully') 
+                clearInputs();
+             })
+             .catch((err)=>console.log('ERROR:deleting'))
+       }
+       function displaySum(s){
+       div2.innerHTML=`<span>Total Value Worth Of Products: Rs ${s}</span>`;
+       }
+       document.body.appendChild(div2);
+       function clearInputs(){
+        document.querySelector('#name').value='';
+        document.querySelector('#price').value='';
+       }
+</script>
+</html>
